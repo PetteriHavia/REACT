@@ -7,20 +7,13 @@ import './index.css';
 
 const App = () => (
   <div>
-    <h1>Pokemon REST-API</h1>
-    <div className="Banner">
-    <img src="imageBanner.png" alt="BannerImg" />
-    </div>
-    <div className="searchBar">
-      <SearchBar />
-    </div>
-    <div className="infoTable">
-      <GetPokemonData />
-    </div>
+    <h1>Pokemon REST-API with REACT</h1>
+    <img className ="img" src="imageBanner.png" alt="BannerImg" />
   </div>
 
 );
 
+ReactDOM.render(<App />, document.getElementById("root"));
 
 const SearchBar = () => {
 
@@ -45,12 +38,12 @@ const SearchBar = () => {
         <div>
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Search: </label>
+              <label>Search By ObjectID: </label>
               <input
                 type="query"
                 className="form-control"
                 id="query"
-                placeholder="Enter pokemon ID"
+                placeholder="Enter pokemon ID example: 5e9c425c2bb02b0a242ea8e8"
                 name="query"
               />
             </div>
@@ -71,30 +64,33 @@ const SearchBar = () => {
       </div>
     );
   };
-  ReactDOM.render(<SearchBar />, document.getElementById("root"));
+  ReactDOM.render(<SearchBar />, document.getElementById("rootSecond"));
 
 
   const GetPokemonData = () => {
     fetch("https://projectrestapi.herokuapp.com/api/getAll")
     .then((results) => {
-      return results.json();
+      if (results.ok) {
+        return results.json();
+      }else{
+          throw new Error('There was an error');
+      }
     })
     .then((data) => {
       console.log(data);
       const items = data;
-
       ReactDOM.render(<PokemonArray data={items} />,
-        document.getElementById("root")
+        document.getElementById("rootSecond")
       );
     });
-    return <div>Nothing here. Fetching data...</div>;
+    return <div>Fetching data...</div>;
   };
 
 
-  // Toimii hieman sekavasti sillä hakukenttä etsii nyt pokemonnin
+  // Toimii hieman sekavasti sillä hakukenttä etsii nyt pokemonin
   // ObjectID:n perusteella nimen sijaan. Esimerkki ID: 5e9c425c2bb02b0a242ea8e8
-  const GetOnePokemon = (id) => {
-    fetch("https://projectrestapi.herokuapp.com/api/get/" + id)
+  const GetOnePokemon = (query) => {
+    fetch("https://projectrestapi.herokuapp.com/api/get/" + query)
     .then((results) => {
       return results.json();
     })
@@ -104,10 +100,10 @@ const SearchBar = () => {
       console.log("One Pokemon: ", data);
 
       ReactDOM.render(<PokemonArray data={items} />,
-        document.getElementById("root")
+        document.getElementById("rootSecond")
       );
     });
-    return <div>Nothing here. Fetching data...</div>;
+    return <div>Fetching data...</div>;
   };
 
 
@@ -116,22 +112,25 @@ const PokemonArray = (props) => {
 
   return (
     <div>
-      <SearchBar />
+     <SearchBar />
       <table className="table table-striped table-bordered">
         <thead>
           <tr key={props.id}>
+            <th scope="col">Pokedex</th>
             <th scope="col">Name</th>
-            <th scope="col">Jname</th>
+            <th scope="col">Japanese Name</th>
             <th scope="col">Type</th>
+            <th scope="col">ObjectID</th>
           </tr>
         </thead>
         <tbody>
-          {data.pokemon.map((item, i) => (
+          {data.map((item, i) => (
             <tr>
               <td key={i}> {item.pokedex} </td>
               <td> {item.name} </td>
               <td> {item.jname} </td>
               <td> {item.type} </td>
+              <td> {item._id} </td>
              </tr>
           ))}
         </tbody>
@@ -141,7 +140,6 @@ const PokemonArray = (props) => {
 };
   
 
-ReactDOM.render(<App />, document.getElementById("root"));
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
