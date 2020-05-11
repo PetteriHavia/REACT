@@ -1,10 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-var express = require('express')
-var cors = require('cors')
-var app = express()
-app.use(cors())
 //import App from './App';
 //import * as serviceWorker from './serviceWorker';
 
