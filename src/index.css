@@ -40,6 +40,10 @@ h1{
 }
 
 .table{
-  width:35%;
+  width:40%;
   margin: auto;
+}
+
+th{
+  text-align: center;
 }

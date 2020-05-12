@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-//import App from './App';
-//import * as serviceWorker from './serviceWorker';
 
 
 const App = () => (
@@ -17,7 +15,7 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 const SearchBar = () => {
 
-  // Määritellään käsittelija napille 1 
+  // Btn Submit
     const handleSubmit = (event) => {
       event.preventDefault();
       console.log("Tapahtuman aiheutti: ", event.target);
@@ -26,7 +24,7 @@ const SearchBar = () => {
       GetOnePokemon(form.query.value);
     };
     
-    // Määritellään käsittelija napille 2 
+    // Btn Get All
     const handleClick = (event) => {
       event.preventDefault();
       console.log("Tapahtuman aiheutti: ", event.target);
@@ -43,7 +41,7 @@ const SearchBar = () => {
                 type="query"
                 className="form-control"
                 id="query"
-                placeholder="Enter pokemon ID example: 5e9c425c2bb02b0a242ea8e8"
+                placeholder="Enter Pokemon ObjectID"
                 name="query"
               />
             </div>
@@ -67,6 +65,7 @@ const SearchBar = () => {
   ReactDOM.render(<SearchBar />, document.getElementById("rootSecond"));
 
 
+  // Get all the Pokemons
   const GetPokemonData = () => {
     fetch("https://projectrestapi.herokuapp.com/api/getAll")
     .then((results) => {
@@ -87,17 +86,19 @@ const SearchBar = () => {
   };
 
 
-  // Toimii hieman sekavasti sillä hakukenttä etsii nyt pokemonin
-  // ObjectID:n perusteella nimen sijaan. Esimerkki ID: 5e9c425c2bb02b0a242ea8e8
+  // Search the Pokemon by MongoDB ObjectID
   const GetOnePokemon = (query) => {
     fetch("https://projectrestapi.herokuapp.com/api/get/" + query)
     .then((results) => {
       return results.json();
     })
     .then((data) => {
-      console.log("Haun tulokset", data);
-      const items = data;
-      console.log("One Pokemon: ", data);
+      // Create new Array
+      var items = [];
+      console.log(data);
+      // Push the data object into array
+      items.push(data);
+      console.log(items);
 
       ReactDOM.render(<PokemonArray data={items} />,
         document.getElementById("rootSecond")
@@ -113,7 +114,7 @@ const PokemonArray = (props) => {
   return (
     <div>
      <SearchBar />
-      <table className="table table-striped table-bordered">
+      <table className="table  table-bordered table-hover">
         <thead>
           <tr key={props.id}>
             <th scope="col">Pokedex</th>
@@ -129,7 +130,7 @@ const PokemonArray = (props) => {
               <td key={i}> {item.pokedex} </td>
               <td> {item.name} </td>
               <td> {item.jname} </td>
-              <td> {item.type} </td>
+              <td> {item.type[0]} {item.type[1]} </td>
               <td> {item._id} </td>
              </tr>
           ))}
@@ -138,7 +139,8 @@ const PokemonArray = (props) => {
     </div>
   );
 };
-  
+
+
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
