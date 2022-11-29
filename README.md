@@ -1,3 +1,7 @@
+# React project part 2
+
+Displays pokemons from the Node.js Pokemon API that was made in the project part 1.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
